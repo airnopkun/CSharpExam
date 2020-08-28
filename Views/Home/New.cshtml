@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "New Event";
+}
+@model Event;
+
+<div id="header">
+    <h2>Dojo Activity Center</h2>
+    <a href="/home">Home</a>
+    <a href="/">Log Out</a>
+</div>
+<h2>Create an Event</h2>
+<div id="content">
+    <div id="form">
+        <form asp-action="CreateEvent" asp-controller="Home" method="post">
+            <span asp-validation-for="Title"></span><br>
+            <label asp-for="Title"></label>
+            <input asp-for="Title"><br>
+            <span asp-validation-for="StartDate"></span><br>
+            <label asp-for="StartDate"></label>
+            <input asp-for="StartDate" type="datetime-local"><br>
+            <span asp-validation-for="Duration"></span><br>
+            <label asp-for="Duration"></label>
+            <input asp-for="Duration" type="number">
+            <span asp-validation-for="DurationUnit"></span><br>
+            <label asp-for="DurationUnit"></label>
+            <select asp-for="DurationUnit">
+                <option value="Minutes">Minutes</option>
+                <option value="Hours">Hours</option>
+                <option value="Days">Days</option>
+            </select><br>
+            <span asp-validation-for="Description"></span><br>
+            <label asp-for="Description"></label>
+            <input asp-for="Description"><br>
+            <input asp-for="UserId" type="hidden" value="@ViewBag.sessionUser.UserId">
+            <input value="Create Event" type="submit">   
+        </form>
+    </div>
+</div>

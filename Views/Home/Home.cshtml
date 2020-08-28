@@ -1,0 +1,70 @@
+@{
+    ViewData["Title"] = "Home";
+}
+@model RSVP
+
+
+<div id="header">
+    <h2>Dojo Event Center</h2>
+    <p>Welcome, @ViewBag.sessionUser.FirstName @ViewBag.sessionUser.LastName</p>
+    <a href="/"> Log Out</a>
+</div>
+<table class="table table-striped col-10">
+    <tr>
+        <th>Event</th>
+        <th>Date and Time</th>
+        <th>Duration</th>
+        <th>Event Coordinator</th>
+        <th>No. of Participants</th>
+        <th>Actions</th>
+    </tr>
+    @foreach(var e in ViewBag.AllEvents)
+    {
+        @if(e.StartDate > DateTime.Now)
+        {
+            <tr>
+                <td><a href="/event/@e.EventId">@e.Title</a></td>
+                <td>@e.StartDate</td>
+                <td>@e.Duration @e.DurationUnit</td>
+                <td>@e.Creator.FirstName @e.Creator.LastName</td>
+                <td>@e.Participants.Count</td>
+                @if(e.Creator == ViewBag.sessionUser)
+                {
+                    <td>
+                        <form asp-action="Delete" asp-controller="Home" method="post">
+                            <input asp-for="EventId" type="hidden" value="@e.EventId">
+                            <input asp-for="UserId" type="hidden" value="@ViewBag.sessionUser.UserId">
+                            <input value="Delete" type="submit">   
+                        </form>
+                    </td>
+                }
+                else
+                {
+                    if(ViewBag.EventsAttending.Contains(e))
+                    {
+                        <td>
+                            <form asp-action="Leave" asp-controller="Home" method="post">
+                                <input asp-for="EventId" type="hidden" value="@e.EventId">
+                                <input asp-for="UserId" type="hidden" value="@ViewBag.sessionUser.UserId">
+                                <input value="Leave" type="submit">
+                            </form>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <form asp-action="Join" asp-controller="Home" method="post">
+                                <input asp-for="EventId" type="hidden" value="@e.EventId">
+                                <input asp-for="UserId" type="hidden" value="@ViewBag.sessionUser.UserId">
+                                <input value="Join" type="submit">
+                            </form>
+                        </td>
+                    }
+                }
+            </tr>
+        }
+    }
+</table>
+<form action="/new">
+    <input type="submit" value="Add a New Activity"/>
+</form>
